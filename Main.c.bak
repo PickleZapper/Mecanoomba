@@ -16,8 +16,8 @@ Quad_Encoder(port 3, port 4) frontRightQuad
 
 
 /*
-	vacuumWidth is on the coordinate plane where leftmost = 0 and rightmost = vacuumWidth
-	0-------------------(vacuumWidth)
+	vaccumnWidth is on the coordinate plane where leftmost = 0 and rightmost = vaccumnWidth
+	0-------------------(vaccumnWidth)
 */
 
 task control_listener(){
@@ -52,10 +52,10 @@ void driveForward(int speed){ //says forward but really will accept any standard
 
 task main(){
 	
-	int controlMode = 0; //modes:: driver control = 0; vacuuming = 1
-	int vacuumWidth; //horizontal(left, right) distance to vacuum
-	int vacuumDistance = 45; //vertical(forward) distance to vacuum, PLACEHOLDER VALUE
-	boolean vacuumingRight; //indicates the direction to vacuum sweep
+	int controlMode = 0; //modes:: driver control = 0; vaccumning = 1
+	int vaccumnWidth; //horizontal(left, right) distance to vaccumn
+	int vaccumnDistance = 45; //vertical(forward) distance to vaccumn, PLACEHOLDER VALUE
+	boolean vaccumningRight; //indicates the direction to vaccumn sweep
 	StartTask(control_listener);
 	
 	while(true){
@@ -73,9 +73,9 @@ task main(){
 			wait1Msec(1);
 		}
 		if(controlMode == 1){
-			vacuumWidth = 0; //clear history
+			vaccumnWidth = 0; //clear history
 			SensorValue[frontRightQuad] = 0; //clear encoder
-			vacuumingRight = false; //reset direction
+			vaccumningRight = false; //reset direction
 			
 			while(vexRT[Btn6U] == 0) { //wait for button press
 				wait1Msec(1);
@@ -86,12 +86,12 @@ task main(){
 			while(vexRT[Btn6U] == 1){ //wait for button release
 				wait1Msec(1);
 			}
-			vacuumWidth = SensorValue[frontRightQuad]; //set crab-driving distance to encoder value
+			vaccumnWidth = SensorValue[frontRightQuad]; //set crab-driving distance to encoder value
 			while(SensorValue[frontUltrasonic] > 5){ //while 5 cm away from front obstacle
 			
 				int distanceSave = SensorValue[frontRightQuad]; //save encoder position to account for inaccurate driving
 				driveForward(50); //drive forward
-				while(SensorValue[frontRightQuad] - distanceSave < vacuumingDistance){ //wait until distance has been driven
+				while(SensorValue[frontRightQuad] - distanceSave < vaccumningDistance){ //wait until distance has been driven
 					wait1Msec(1); }
 				driveForward(0); //stop driving forward
 				SensorValue[frontRightQuad] = distanceSave; //reset encoder to last value
@@ -103,11 +103,11 @@ task main(){
 					driveForward(0); //stop driving
 				} else{ //crab drive left
 					crabDrive(false);
-					while(SensorValue[frontRightQuad] < vacuumWidth){ //wait until at (vacuumWidth) position
+					while(SensorValue[frontRightQuad] < vaccumnWidth){ //wait until at (vaccumnWidth) position
 						wait1Msec(1); }
 						driveForward(0); //stop driving
 				}
-				vacuumingRight = !vacuumingRight; //switch directions for next time
+				vaccumningRight = !vaccumningRight; //switch directions for next time
 			}
 			controlMode = 0; 
 			startTask(control_listener);

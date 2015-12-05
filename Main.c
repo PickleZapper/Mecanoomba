@@ -22,7 +22,7 @@ task control_listener(){
 			controlMode = 0;
 		if(vexRT[Btn8R] == 1)
 			controlMode = 1;
-		wait1Msec(10);
+		wait1Msec(50);
 	}
 }
 void crabDrive(bool driveRight){
@@ -66,7 +66,7 @@ task main(){
 				startMotor(frontLeftMotor, vexRT[Ch3]);
 				startMotor(backLeftMotor, vexRT[Ch3]);
 			}
-			wait1Msec(1);
+			wait1Msec(10);
 		}
 		if(controlMode == 1){
 			vacuumWidth = 0; //clear history
@@ -74,13 +74,13 @@ task main(){
 			vacuumingRight = false; //reset direction
 
 			while(vexRT[Btn6U] == 0) { //wait for button press
-				wait1Msec(1);
+				wait1Msec(10);
 			}
 			crabDrive(true);//start crab-driving right
 			stopTask(control_listener); //disable mode switching
 
 			while(vexRT[Btn6U] == 1){ //wait for button release
-				wait1Msec(1);
+				wait1Msec(10);
 			}
 			vacuumWidth = SensorValue[frontRightQuad]; //set crab-driving distance to encoder value
 			while(SensorValue[frontUltrasonic] > 5){ //while 5 cm away from front obstacle
@@ -88,25 +88,25 @@ task main(){
 				int distanceSave = SensorValue[frontRightQuad]; //save encoder position to account for inaccurate driving
 				driveForward(50); //drive forward
 				while(SensorValue[frontRightQuad] - distanceSave < vacuumDistance){ //wait until distance has been driven
-					wait1Msec(1); }
+					wait1Msec(10); }
 				driveForward(0); //stop driving forward
 				SensorValue[frontRightQuad] = distanceSave; //reset encoder to last value
 
 				if(vacuumingRight){ //crab drive right
 					crabDrive(true);
 					while(SensorValue[frontRightQuad] > 0){ //wait until at 0 position
-						wait1Msec(1); }
+						wait1Msec(10); }
 					driveForward(0); //stop driving
-					} else{ //crab drive left
+				} else{ //crab drive left
 					crabDrive(false);
 					while(SensorValue[frontRightQuad] < vacuumWidth){ //wait until at (vacuumWidth) position
-						wait1Msec(1); }
+						wait1Msec(10); }
 					driveForward(0); //stop driving
 				}
 				vacuumingRight = !vacuumingRight; //switch directions for next time
 			}
-			controlMode = 0;
-			startTask(control_listener);
+			controlMode = 0; //revert to driver control
+			startTask(control_listener); 
 		}
 	}
 

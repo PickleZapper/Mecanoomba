@@ -18,7 +18,7 @@
 
 
 
-int launcherSpeed = 127;
+float launcherSpeed = 127;
 bool launcherRunning = false;
 
 void runLauncher(int speed){
@@ -36,13 +36,13 @@ task motor_control{
 		motor[backRightMotor] = vexRT[Ch2];
 		motor[frontRightMotor] = vexRT[Ch3];
 		motor[backLeftMotor] = vexRT[Ch3];
-		} else if(vexRT[Btn5U] == 1) {
+	} else if(vexRT[Btn5U] == 1) {
 		motor[frontLeftMotor] = 127;
 		motor[backRightMotor] = 127;
 		motor[frontRightMotor] = 127;
 		motor[backLeftMotor] = 127;
 		wait1Msec(40);
-		} else{
+	} else{
 		motor[frontLeftMotor] = -127;
 		motor[backRightMotor] = -127;
 		motor[frontRightMotor] = -127;
@@ -68,25 +68,25 @@ task launcher_speed_control(){
 	while(true){
 		if(vexRT[Btn8L] == 1 && vexRT[Btn8R] == 0){
 			launcherSpeed -= 12.7;
-			while(vexRT[Btn8L] == 1)
-				wait1Msec(20);
-			} else if(vexRT[Btn8L] == 0 && vexRT[Btn8R] == 1){
+		} else if(vexRT[Btn8L] == 0 && vexRT[Btn8R] == 1){
 			launcherSpeed += 12.7;
-			while(vexRT[Btn8R] == 1)
-				wait1Msec(20);
 		}
+		if(launcherRunning)
+			runLauncher(launcherSpeed);
+		while(vexRT[Btn8L] == 1 || vexRT[Btn8R] == 1)
+			wait1Msec(20);
 		wait1Msec(50);
 	}
 }
 
 task intake_control(){
 	while(true){
-		if(vexRT[Btn7U] == 1)
+		if(vexRT[Btn7U] == 1){
 			motor[intakeMotor] = 127;
-		else if(vexRT[Btn7D] == 1)
+		} else if(vexRT[Btn7D] == 1){
 			motor[intakeMotor] = -127;
-		else
-			motor[intakeMotor] = 0;
+		} else{
+			motor[intakeMotor] = 0; }
 		wait1Msec(50);
 	}
 }

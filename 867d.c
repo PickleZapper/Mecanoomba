@@ -21,7 +21,7 @@
 float launcherSpeed = 127;
 bool launcherRunning = false;
 
-void runLauncher(int speed){
+void runLauncher(int speed){ //starts flywheels at speed "speed"
 	if(speed > 127)
 		speed = 127;
 	if(speed < 127)
@@ -31,18 +31,18 @@ void runLauncher(int speed){
 }
 
 task motor_control{
-	if((vexRT[Btn5U] == 0) == (vexRT[Btn6U] == 0)){
+	if((vexRT[Btn5U] == 0) == (vexRT[Btn6U] == 0)){ //normal driving controls
 		motor[frontLeftMotor] = vexRT[Ch2];
 		motor[backRightMotor] = vexRT[Ch2];
 		motor[frontRightMotor] = vexRT[Ch3];
 		motor[backLeftMotor] = vexRT[Ch3];
-	} else if(vexRT[Btn5U] == 1) {
+	} else if(vexRT[Btn5U] == 1) { //rotate left (right?)
 		motor[frontLeftMotor] = 127;
 		motor[backRightMotor] = 127;
 		motor[frontRightMotor] = 127;
 		motor[backLeftMotor] = 127;
 		wait1Msec(40);
-	} else{
+	} else{ //rotate right (left?)
 		motor[frontLeftMotor] = -127;
 		motor[backRightMotor] = -127;
 		motor[frontRightMotor] = -127;
@@ -52,7 +52,7 @@ task motor_control{
 	wait1Msec(10);
 }
 
-task launcher_toggle_listener(){
+task launcher_toggle_listener(){ //controls flywheels
 	while(true){
 		if(vexRT[btn8D] == 1  && !launcherRunning)
 			runLauncher(launcherSpeed);
@@ -64,7 +64,7 @@ task launcher_toggle_listener(){
 	}
 }
 
-task launcher_speed_control(){
+task launcher_speed_control(){ //changes speed of flywheels
 	while(true){
 		if(vexRT[Btn8L] == 1 && vexRT[Btn8R] == 0){
 			launcherSpeed -= 12.7;
@@ -79,7 +79,7 @@ task launcher_speed_control(){
 	}
 }
 
-task intake_control(){
+task intake_control(){ //controls intakes
 	while(true){
 		if(vexRT[Btn7U] == 1){
 			motor[intakeMotor] = 127;

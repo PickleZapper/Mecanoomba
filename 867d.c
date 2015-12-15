@@ -1,6 +1,6 @@
-#pragma config(Motor,  port2,           frontRightMotor, tmotorVex269_MC29, openLoop)
+#pragma config(Motor,  port2,           backRightMotor, tmotorVex269_MC29, openLoop)
 #pragma config(Motor,  port3,           frontLeftMotor, tmotorVex269_MC29, openLoop)
-#pragma config(Motor,  port4,           backRightMotor, tmotorVex269_MC29, openLoop)
+#pragma config(Motor,  port4,           frontRightMotor, tmotorVex269_MC29, openLoop)
 #pragma config(Motor,  port5,           backLeftMotor, tmotorVex269_MC29, openLoop)
 #pragma config(Motor,  port6,           rightFlywheel, tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port7,           leftFlywheel,  tmotorVex393_MC29, openLoop)
@@ -51,18 +51,23 @@ task motor_control{
 			wait1Msec(40);
 		}
 		wait1Msec(10);
+		EndTimeSlice();
 	}
 }
 
 task launcher_toggle_listener(){ //controls flywheels
 	while(true){
-		if(vexRT[btn8D] == 1  && !launcherRunning)
+		if(vexRT[btn8D] == 1  && !launcherRunning) {
 			runLauncher(launcherSpeed);
-		if(vexRT[btn8D] == 1 && launcherRunning)
+			launcherRunning = !launcherRunning;
+			} else if(vexRT[btn8D] == 1 && launcherRunning){
 			runLauncher(0);
+			launcherRunning = !launcherRunning;
+		}
 		while(vexRT[btn8D] == 1)
 			wait1Msec(50);
 		wait1Msec(50);
+		EndTimeSlice();
 	}
 }
 
@@ -78,6 +83,7 @@ task launcher_speed_control(){ //changes speed of flywheels
 		while(vexRT[Btn8L] == 1 || vexRT[Btn8R] == 1)
 			wait1Msec(20);
 		wait1Msec(50);
+		EndTimeSlice();
 	}
 }
 
@@ -90,6 +96,7 @@ task intake_control(){ //controls intakes
 			} else{
 			motor[intakeMotor] = 0; }
 		wait1Msec(50);
+		EndTimeSlice();
 	}
 }
 
@@ -167,6 +174,6 @@ task usercontrol()
 		// .....................................................................................
 		// Insert user code here. This is where you use the joystick values to update your motors, etc.
 		// .....................................................................................
-		wait(1);
+		wait1Msec(100);
 	}
 }
